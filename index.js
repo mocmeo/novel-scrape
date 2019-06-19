@@ -1,4 +1,5 @@
 const puppeteer = require("puppeteer");
+const fs = require("fs");
 
 const url = "https://novels77.com/242810-the-hunger-games.html";
 
@@ -37,15 +38,26 @@ const getBookData = async page => {
 	return book;
 };
 
+const writeToFile = book => {
+	fs.writeFile(
+		"./result/book.json",
+		JSON.stringify(book, null, 2), // optional params to format it nicely
+		err =>
+			err
+				? console.error("Data not written!", err)
+				: console.log("Data written!")
+	);
+};
+
 void (async () => {
 	const browser = await puppeteer.launch();
 	const page = await browser.newPage();
 	await page.goto(url);
 
-	console.log("Collecting raw data..");
+	// Collecting raw book data
 	const book = await getBookData(page);
 
-	console.log("Collecting information about each chapter...");
+	// Collecting information about each chapter
 	for (const link of book.links) {
 		await page.goto(`${link.url}`);
 		const chapContent = await page.evaluate(() => {
@@ -58,8 +70,9 @@ void (async () => {
 		});
 		console.log(`Done ${link.text}`);
 	}
-
-	console.log("Scraping data completed!");
-	console.log(book);
 	await browser.close();
+	console.log("Scraping data completed!");
+
+	// Write data to json file
+	writeToFile(book);
 })();
