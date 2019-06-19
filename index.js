@@ -1,7 +1,8 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 
-const url = "https://novels77.com/242810-the-hunger-games.html";
+// get link from command line
+const url = process.argv[2];
 
 const getBookData = async page => {
 	let book = await page.evaluate(() => {
@@ -38,9 +39,28 @@ const getBookData = async page => {
 	return book;
 };
 
+const getBookChapters = async (book, page) => {
+	// Print book title
+	console.log(book.title);
+
+	// Collecting information about each chapter
+	for (const link of book.links) {
+		await page.goto(`${link.url}`);
+		const chapContent = await page.evaluate(() => {
+			return document.querySelector("div.chapter-content").innerText.trim();
+		});
+		book.data.push({
+			text: link.text,
+			content: chapContent
+		});
+		console.log(`Done ${link.text}`);
+	}
+	return book;
+};
+
 const writeToFile = book => {
 	fs.writeFile(
-		"./result/book.json",
+		`./result/${book.title}.json`,
 		JSON.stringify(book, null, 2), // optional params to format it nicely
 		err =>
 			err
@@ -53,26 +73,14 @@ void (async () => {
 	const browser = await puppeteer.launch();
 	const page = await browser.newPage();
 	await page.goto(url);
+	let book = null;
 
 	// Collecting raw book data
-	const book = await getBookData(page);
-
-	// Collecting information about each chapter
-	for (const link of book.links) {
-		await page.goto(`${link.url}`);
-		const chapContent = await page.evaluate(() => {
-			return document.querySelector("div.chapter-content").innerText.trim();
-		});
-
-		book.data.push({
-			text: link.text,
-			content: chapContent
-		});
-		console.log(`Done ${link.text}`);
-	}
+	book = await getBookData(page);
+	book = await getBookChapters(book, page);
 	await browser.close();
-	console.log("Scraping data completed!");
 
 	// Write data to json file
 	writeToFile(book);
+	console.log("Scraping data completed!!");
 })();
