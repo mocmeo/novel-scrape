@@ -1,0 +1,11 @@
+{
+  "name": "novel-scrape",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:mocmeo/novel-scrape.git",
+  "author": "mocmeo <ngnlam96@hotmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^1.17.0"
+  }
+}

@@ -1,0 +1,28 @@
+{
+	"title": "The Hunger Games",
+	"author": "Suzanne Collins",
+	"description": "bla blo bla lo",
+	"genres": "Science Fiction",
+	"data": [
+		{
+			"id": "0",
+			"content": "When I wake up, the other side of the bed is cold. My fingers stretch out"
+		},
+		{
+			"id": "2",
+			"content": [
+				"http://imgur.com/url1",
+				"http://imgur.com/url2",
+				"http://imgur.com/url3"
+			]
+		}
+	],
+	"type": "novel",
+	"links": [
+		{
+			"text": "Chapter 1",
+			"url": "http://novel.com/chap1"
+		}
+	],
+	"imageUrl": "http://hehe.com/url"
+}
