@@ -55,6 +55,10 @@ const getBookChapters = async (book, page) => {
 		});
 		console.log(`Done ${link.text}`);
 	}
+
+	// refine data once more
+	book.genres = book.genres.map(genre => genre.text);
+	delete book.links;
 	return book;
 };
 
