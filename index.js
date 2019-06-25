@@ -58,6 +58,7 @@ const getBookChapters = async (book, page) => {
 
 	// refine data once more
 	book.genres = book.genres.map(genre => genre.text);
+	book.type = "novel";
 	delete book.links;
 	return book;
 };
